@@ -1,6 +1,6 @@
 // 提取handlers 成一个文件
 import { tarck, trigger } from "./effect"
-import { reactive, readonly } from "./reactive"
+import { reactive, ReactiveFlag, readonly } from "./reactive"
 
 // 缓存 get set
 const get = createGetter();
@@ -17,6 +17,13 @@ const isObject:(object:any)=> boolean = (raw:any) => {
 
 function createGetter(isReactive = true, isShallow = false) {
   return (target: object, key: PropertyKey) => {
+    if(key === ReactiveFlag.v__isReactive){
+      return isReactive
+    }
+    if(key === ReactiveFlag.v__isReadonly){
+      return !isReactive
+    }
+
     const result = Reflect.get(target, key)
     if(!isShallow && isObject(result)){
       return isReactive ? reactive(result) : readonly(result)

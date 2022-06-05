@@ -1,5 +1,10 @@
 import { mutableHandlers, readonlyHandlers, shallowReactiveHandlers, shallowReadonlyHandlers } from "./baseHandlers";
 
+export enum ReactiveFlag {
+  'v__isReactive' = 'v__isReactive',
+  'v__isReadonly' = 'v__isReadonly'
+}
+
 
 export function reactive<T extends object>(raw:T):any {
   return createActiveObject(raw, mutableHandlers)
@@ -22,6 +27,15 @@ export function shallowReadonly<T extends object>(raw:T):any {
 
 function createActiveObject<T extends object>(raw:T, handlers:any){
   return new Proxy(raw, handlers)
+}
+
+
+export function isReactive(ref:any) {
+  return !!ref[ReactiveFlag.v__isReactive]
+}
+
+export function isReadonly(ref:any) {
+  return !!ref[ReactiveFlag.v__isReadonly]
 }
 
 

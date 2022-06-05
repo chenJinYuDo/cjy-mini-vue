@@ -1,4 +1,4 @@
-import { reactive, readonly } from "./reactive";
+import { isReactive, isReadonly, reactive, readonly, shallowReadonly } from "./reactive";
 
 // 支持 stop 回调
 it('happy path', () => {
@@ -31,4 +31,17 @@ describe('readonly', () => {
 
 		expect(console.warn).toBeCalled();
 	});
+
+	test("should not make non-reactive prpperties reactive", () => {
+    const props = shallowReadonly({ n: { foo: 1}});
+    expect(isReadonly(props)).toBe(true);
+    expect(isReadonly(props.n)).toBe(false);
+  })
+
+	it("isReactive", ()=> {
+    const original = { foo: 1};
+    const observed = reactive(original);
+    expect(isReactive(observed)).toBe(true);
+    expect(isReactive(original)).toBe(false);
+  })
 });
