@@ -1,28 +1,46 @@
-// import { reactive } from "../reactive"
+import { isReactive, isReadonly, reactive, readonly, shallowReadonly } from ".."
 
-// test.skip('Object', () => {
-//   const original = { foo: 1 }
-//   const observed = reactive(original)
-//   expect(observed).not.toBe(original)
-//   // expect(isReactive(observed)).toBe(true)
-//   // expect(isReactive(original)).toBe(false)
-//   // get
-//   expect(observed.foo).toBe(1)
-//   // has
-//   expect('foo' in observed).toBe(true)
-//   // ownKeys
-//   expect(Object.keys(observed)).toEqual(['foo'])
-// })
+it('happy path', () => {
+  const original = { foo: 1 };
+  const observed = reactive(original);
+  /** observed 和 original 的指向不一样 */
+  expect(original).not.toBe(observed);
 
-// // test('nested reactives', () => {
-// //   const original = {
-// //     nested: {
-// //       foo: 1
-// //     },
-// //     array: [{ bar: 2 }]
-// //   }
-// //   const observed = reactive(original)
-// //   expect(isReactive(observed.nested)).toBe(true)
-// //   expect(isReactive(observed.array)).toBe(true)
-// //   expect(isReactive(observed.array[0])).toBe(true)
-// // })
+  /** observed.foo ==> 1 */
+  expect(observed.foo).toBe(1);
+});
+
+describe('readonly', () => {
+	it('happy path', () => {
+		const original = { foo: 1, bar: { baz: 2 } };
+		const wrapped = readonly(original);
+		/** observed 和 original 的指向不一样 */
+		expect(wrapped).not.toBe(original);
+		expect(wrapped.foo).toBe(1);
+	});
+
+	it('warn then call set', () => {
+		console.warn = jest.fn();
+
+		const user = readonly({
+			age: 10,
+		});
+
+		user.age = 11;
+
+		expect(console.warn).toBeCalled();
+	});
+
+	test("should not make non-reactive prpperties reactive", () => {
+    const props = shallowReadonly({ n: { foo: 1}});
+    expect(isReadonly(props)).toBe(true);
+    expect(isReadonly(props.n)).toBe(false);
+  })
+
+	it("isReactive", ()=> {
+    const original = { foo: 1};
+    const observed = reactive(original);
+    expect(isReactive(observed)).toBe(true);
+    expect(isReactive(original)).toBe(false);
+  })
+});
