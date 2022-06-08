@@ -1,3 +1,4 @@
+import { isObject } from "../shared";
 import { createComponentInstance, setupComponent } from "./component"
 import { createVNode } from "./vnode";
 
@@ -14,7 +15,14 @@ function patch(vnode:any, container:any){
    * 如果是元素
    *  xxx
    * */ 
-   processComponent(vnode, container)
+  if(typeof vnode.type === 'string'){
+    // 处理element
+    processElement(vnode, container)
+  }else if(isObject(vnode.type)){
+    // 处理组件
+    processComponent(vnode, container)
+  }
+
 }
 
 /** 创建组件过程 */ 
@@ -33,8 +41,36 @@ function mountComponent(vnode:any, container:any) {
 
 function setupRenderEffect(instance: any, container: any) {
   const subTree = instance.render();
-
   patch(subTree, container)
 }
 
+
+function processElement(vnode: any, container: any) {
+  mountElement(vnode, container);
+}
+
+function mountElement(vnode: any, container: any) {
+  // 创建元素
+  const el = document.createElement(vnode.type);
+
+  // 渲染样式
+  const { props , children } = vnode
+  if(props){
+    for(let key in props){
+      el.setAttribute(key, props[key])
+    }
+  }
+
+  // 渲染子节点
+  if(typeof children === 'string'){
+    el.textContent = children;
+  }else if(Array.isArray(children)){
+    children.map(child => {
+      patch(child, el)
+    })
+  }
+
+  // 添加到页面上
+  container.append(el);
+}
 
