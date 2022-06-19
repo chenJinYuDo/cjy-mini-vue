@@ -60,7 +60,16 @@ function mountElement(vnode: any, container: any) {
   const { props, children, shapeFlag } = vnode;
   if (props) {
     for (let key in props) {
-      el.setAttribute(key, props[key]);
+      if(isEvent(key)){
+        el.addEventListener(key.slice(2).toLocaleLowerCase(),props[key])
+      }else{
+        el.setAttribute(key, props[key]);
+      }
+    }
+
+    /** 命名规范 on+一个大写字母 */
+    function isEvent(key:string){
+      return /^on[A-Z]/.test(key);
     }
   }
 
