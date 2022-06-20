@@ -1,4 +1,5 @@
 import { shallowReadonly } from "../reactivity";
+import { emit } from "./componentEmit";
 import { initProps } from "./componentProps";
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
 
@@ -12,8 +13,12 @@ export function createComponentInstance(vnode: any) {
     setupStatus: {},
     props:{},
     proxy: null,
-    el:null
+    el:null,
+    emit:()=>{}
   };
+
+  instance.emit = emit.bind(null, instance) as any
+
   return instance;
 }
 
@@ -27,13 +32,13 @@ export function setupComponent(instance: any) {
 function setupStatefulComponent(instance: any) {
   const component = instance.type,
     { setup } = component,
-    { props } = instance;
+    { props, emit} = instance;
 
   // ctx
   instance.proxy = new Proxy({_:instance},PublicInstanceProxyHandlers);
 
   if (setup) {
-    const setupResult = setup(shallowReadonly(props));
+    const setupResult = setup(shallowReadonly(props), { emit });
 
     handleSetupResult(instance, setupResult);
   }
