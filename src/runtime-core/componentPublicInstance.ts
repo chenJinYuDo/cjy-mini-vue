@@ -1,7 +1,8 @@
 import { hasOwn } from "../shared";
 
 const publicPropertiesMap:{[key:string]:any} = {
-  $el:(i:any) => i.vnode.el
+  $el:(i:any) => i.vnode.el,
+  $slots:(i:any) => i.slots
 }
 
 
@@ -16,9 +17,9 @@ export const PublicInstanceProxyHandlers = {
     }else if(hasOwn(key, props)){
       return props[key]
     }
-
     const publicGetter = publicPropertiesMap[key];
-    publicGetter && publicGetter(instance);
-
+    if(publicGetter){
+      return publicGetter(instance);
+    }
   }
 }
