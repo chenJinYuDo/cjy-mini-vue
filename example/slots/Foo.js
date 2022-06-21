@@ -1,17 +1,17 @@
-import { h } from "../../lib/mini-vue-esm.js";
+import { h , renderSlots} from "../../lib/mini-vue-esm.js";
 
 export default {
   name: 'foo',
 
   /** 1.实现匿名插槽 */
-
+  /** 2.实现多个插槽 */
   render() {
     return h('div', {
       class: 'foo'
     },
       [
         h('div', null, `count: ${this.count}`),
-        this.$slots
+        renderSlots(this.$slots)
       ]
     )
   },

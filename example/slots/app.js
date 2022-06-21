@@ -18,6 +18,7 @@ export default {
       [
         h('div', null, `hi mini-vue3 ${this.msg}`),
         // h('div', null, '匿名插槽')
+        // [h('div', null, '匿名插槽') , h('div', null, '匿名插槽')]
         h(Foo, { count: 1 }, h('div', null, '匿名插槽'))
       ]
     )
