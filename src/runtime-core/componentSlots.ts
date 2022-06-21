@@ -1,3 +1,7 @@
 export function initSlots(instance:any, slots:any){
-  instance.slots = Array.isArray(slots) ? slots : [slots]
+  for (const key in slots) {
+    slots[key] = Array.isArray(slots[key]) ? slots[key] : [slots[key]]
+
+  }
+  instance.slots = slots
 }

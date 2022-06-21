@@ -5,13 +5,19 @@ export default {
 
   /** 1.实现匿名插槽 */
   /** 2.实现多个插槽 */
+  /** 3.实现具名插槽
+   *  (1) 要知道具体名字
+   *  (2) 要知道对应位置
+   *  使用obj处理
+   */
   render() {
     return h('div', {
       class: 'foo'
     },
-      [
+      [ 
+        renderSlots(this.$slots, "header"),
         h('div', null, `count: ${this.count}`),
-        renderSlots(this.$slots)
+        renderSlots(this.$slots, "body")
       ]
     )
   },

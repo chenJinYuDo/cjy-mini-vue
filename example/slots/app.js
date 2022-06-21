@@ -19,7 +19,10 @@ export default {
         h('div', null, `hi mini-vue3 ${this.msg}`),
         // h('div', null, '匿名插槽')
         // [h('div', null, '匿名插槽') , h('div', null, '匿名插槽')]
-        h(Foo, { count: 1 }, h('div', null, '匿名插槽'))
+        h(Foo, { count: 1 },{
+          header:h('div',null, '头部'),
+          body:h('div',null, '身体')
+        })
       ]
     )
   },
