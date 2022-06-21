@@ -1,4 +1,4 @@
-import { h , renderSlots} from "../../lib/mini-vue-esm.js";
+import { h, renderSlots } from "../../lib/mini-vue-esm.js";
 
 export default {
   name: 'foo',
@@ -9,15 +9,17 @@ export default {
    *  (1) 要知道具体名字
    *  (2) 要知道对应位置
    *  使用obj处理
+   *  4.作用域插槽
+   *  使用函数处理
    */
   render() {
     return h('div', {
       class: 'foo'
     },
-      [ 
-        renderSlots(this.$slots, "header"),
+      [
+        renderSlots(this.$slots, "header", { name: 'cjy' }),
         h('div', null, `count: ${this.count}`),
-        renderSlots(this.$slots, "body")
+        renderSlots(this.$slots, "body", { sex: '男' })
       ]
     )
   },

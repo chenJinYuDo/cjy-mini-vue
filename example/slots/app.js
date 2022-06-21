@@ -20,8 +20,8 @@ export default {
         // h('div', null, '匿名插槽')
         // [h('div', null, '匿名插槽') , h('div', null, '匿名插槽')]
         h(Foo, { count: 1 },{
-          header:h('div',null, '头部'),
-          body:h('div',null, '身体')
+          header:({name}) => h('div',null, '头部' + name),
+          body:({sex})=> h('div',null, '身体' + sex)
         })
       ]
     )

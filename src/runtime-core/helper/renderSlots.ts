@@ -1,8 +1,10 @@
 import { createVNode } from "../vnode";
 
-export function renderSlots(slots:any, slotName:string){
-  if(slotName && slots[slotName]){
-    return createVNode('div', {} , slots[slotName]);
+export function renderSlots(slots:any, name:string, ctx:any){
+  const slot = slots[name]
+  if(slot){
+    if(typeof slot === "function"){
+      return createVNode('div', {} , slot(ctx));
+    }
   }
-  return createVNode('div', {} , slots);
 }
