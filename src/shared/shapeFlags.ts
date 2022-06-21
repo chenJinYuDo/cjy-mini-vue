@@ -3,6 +3,7 @@ export const enum ShapeFlags {
   STATEFUL_COMPONENT = 1 << 1, //左移一位
   TEXT_CHILDREN = 1 << 2, //左移两位
   ARRAY_CHILDREN = 1 << 3, //左移三位
+  SLOT_CHILDREN = 1 << 4,
 }
 
 /**

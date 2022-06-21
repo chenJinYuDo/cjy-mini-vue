@@ -15,6 +15,7 @@ function patch(vnode: any, container: any) {
    * 如果是元素
    *  xxx
    * */
+  // debugger
   const { shapeFlag } = vnode
   if (shapeFlag & ShapeFlags.ELEMENT) {
     // 处理element
