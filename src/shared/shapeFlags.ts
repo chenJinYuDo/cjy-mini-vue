@@ -4,6 +4,9 @@ export const enum ShapeFlags {
   TEXT_CHILDREN = 1 << 2, //左移两位
   ARRAY_CHILDREN = 1 << 3, //左移三位
   SLOT_CHILDREN = 1 << 4,
+
+  // FRAGMENT = 1 << 5,
+  
 }
 
 /**

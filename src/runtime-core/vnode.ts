@@ -1,6 +1,8 @@
 import { isObject } from "../shared";
 import { ShapeFlags } from "../shared/shapeFlags";
 
+export const fragment = Symbol('fragment');
+
 export function createVNode(type:any, props?:any, children?:any){
   const vnode =  {
     type,
@@ -9,6 +11,10 @@ export function createVNode(type:any, props?:any, children?:any){
     shapeFlag: getShapeFlag(type),
     el:null
   }
+
+  // if(type === 'fragment'){
+  //   vnode.shapeFlag |= ShapeFlags.FRAGMENT
+  // }
 
   if(typeof children === 'string'){ 
     vnode.shapeFlag |= ShapeFlags.TEXT_CHILDREN
@@ -24,6 +30,7 @@ export function createVNode(type:any, props?:any, children?:any){
   return vnode;
 }
 
+/** 组件 或者 element */ 
 function getShapeFlag(type:any){
   return typeof type === "string" ? ShapeFlags.ELEMENT : ShapeFlags.STATEFUL_COMPONENT
 }

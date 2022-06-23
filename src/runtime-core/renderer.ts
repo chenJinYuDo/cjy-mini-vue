@@ -1,6 +1,7 @@
 import { isObject } from "../shared";
 import { ShapeFlags } from "../shared/shapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
+import { fragment } from "./vnode";
 
 export function render(vnode: any, container: any) {
   patch(vnode, container);
@@ -16,14 +17,30 @@ function patch(vnode: any, container: any) {
    *  xxx
    * */
   // debugger
-  const { shapeFlag } = vnode
-  if (shapeFlag & ShapeFlags.ELEMENT) {
-    // 处理element
-    processElement(vnode, container);
-  } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
-    // 处理组件
-    processComponent(vnode, container);
+  const { type } = vnode;
+
+  switch (type) {
+    case fragment:
+      processFragment(vnode, container);
+      break;
+
+    default:
+      const { shapeFlag } = vnode;
+
+      if (shapeFlag & ShapeFlags.ELEMENT) {
+        // 处理element
+        processElement(vnode, container);
+      } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+        // 处理组件
+        processComponent(vnode, container);
+      }
+      break;
   }
+}
+
+function processFragment(vnode: any, container: any) {
+  const { children } = vnode;
+  mountChilden(children, container);
 }
 
 /** 创建组件过程 */
@@ -61,15 +78,15 @@ function mountElement(vnode: any, container: any) {
   const { props, children, shapeFlag } = vnode;
   if (props) {
     for (let key in props) {
-      if(isEvent(key)){
-        el.addEventListener(key.slice(2).toLocaleLowerCase(),props[key])
-      }else{
+      if (isEvent(key)) {
+        el.addEventListener(key.slice(2).toLocaleLowerCase(), props[key]);
+      } else {
         el.setAttribute(key, props[key]);
       }
     }
 
     /** 命名规范 on+一个大写字母 */
-    function isEvent(key:string){
+    function isEvent(key: string) {
       return /^on[A-Z]/.test(key);
     }
   }
@@ -78,11 +95,16 @@ function mountElement(vnode: any, container: any) {
   if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
     el.textContent = children;
   } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-    children.map((child:any) => {
-      patch(child, el);
-    });
+    mountChilden(children, el);
   }
 
   // 添加到页面上
   container.append(el);
+}
+
+function mountChilden(children: any, container: any) {
+  debugger;
+  children.map((child: any) => {
+    patch(child, container);
+  });
 }
