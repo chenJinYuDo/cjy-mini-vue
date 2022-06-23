@@ -1,7 +1,8 @@
 import { isObject } from "../shared";
 import { ShapeFlags } from "../shared/shapeFlags";
 
-export const fragment = Symbol('fragment');
+export const Fragment = Symbol('Fragment');
+export const Text = Symbol('Text');
 
 export function createVNode(type:any, props?:any, children?:any){
   const vnode =  {
@@ -28,6 +29,10 @@ export function createVNode(type:any, props?:any, children?:any){
   }
 
   return vnode;
+}
+
+export function createTextVNode(text:string){
+  return createVNode(Text, null, text)
 }
 
 /** 组件 或者 element */ 

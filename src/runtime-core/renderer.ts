@@ -1,7 +1,6 @@
-import { isObject } from "../shared";
 import { ShapeFlags } from "../shared/shapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
-import { fragment } from "./vnode";
+import { Fragment, Text } from "./vnode";
 
 export function render(vnode: any, container: any) {
   patch(vnode, container);
@@ -20,10 +19,12 @@ function patch(vnode: any, container: any) {
   const { type } = vnode;
 
   switch (type) {
-    case fragment:
+    case Fragment:
       processFragment(vnode, container);
       break;
-
+    case Text:
+      processText(vnode, container);
+      break;
     default:
       const { shapeFlag } = vnode;
 
@@ -41,6 +42,11 @@ function patch(vnode: any, container: any) {
 function processFragment(vnode: any, container: any) {
   const { children } = vnode;
   mountChilden(children, container);
+}
+
+function processText(vnode: any, container: any){
+ const el = (vnode.el = document.createTextNode(vnode.children));
+ container.append(el);
 }
 
 /** 创建组件过程 */
@@ -103,7 +109,6 @@ function mountElement(vnode: any, container: any) {
 }
 
 function mountChilden(children: any, container: any) {
-  debugger;
   children.map((child: any) => {
     patch(child, container);
   });

@@ -4,7 +4,8 @@ import { initProps } from "./componentProps";
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
 import { initSlots } from "./componentSlots";
 
-/** 创建组件实例
+let currentInstance: any = null;
+ /** 创建组件实例
  * @return instance
  *  */
 export function createComponentInstance(vnode: any) {
@@ -40,8 +41,9 @@ function setupStatefulComponent(instance: any) {
   instance.proxy = new Proxy({_:instance},PublicInstanceProxyHandlers);
 
   if (setup) {
+    setCurrentInstance(instance)
     const setupResult = setup(shallowReadonly(props), { emit });
-
+    setCurrentInstance(null)
     handleSetupResult(instance, setupResult);
   }
 
@@ -59,4 +61,12 @@ function finishComponentSetup(instance: any) {
   if (render) {
     instance.render = render;
   }
+}
+
+export function getCurrentInstance(){
+  return currentInstance
+}
+
+function setCurrentInstance(instance:any){
+  currentInstance = instance
 }
