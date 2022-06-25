@@ -17,7 +17,7 @@ export function createComponentInstance(vnode: any, parent:any) {
     proxy: null,
     slots:{},
     el:null,
-    providers:{}, /** 存储provider们 */
+    providers: parent ? parent.providers : {}, /** 存储provider们 */
     parent,
     emit:()=>{}
   };
