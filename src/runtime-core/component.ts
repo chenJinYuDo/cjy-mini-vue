@@ -8,7 +8,7 @@ let currentInstance: any = null;
  /** 创建组件实例
  * @return instance
  *  */
-export function createComponentInstance(vnode: any) {
+export function createComponentInstance(vnode: any, parent:any) {
   const instance = {
     vnode,
     type: vnode.type,
@@ -17,6 +17,8 @@ export function createComponentInstance(vnode: any) {
     proxy: null,
     slots:{},
     el:null,
+    providers:{}, /** 存储provider们 */
+    parent,
     emit:()=>{}
   };
 
