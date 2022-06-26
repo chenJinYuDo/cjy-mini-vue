@@ -6,9 +6,9 @@ import { Fragment, Text } from "./vnode";
 
 export function createRenderer(options:any){
   const {
-    createElement, /** 创建元素的接口 */
-    patchProp,/** 绑定属性的接口 */
-    insert /** 插入元素的接口 */
+    createElement:hostCreateElement, /** 创建元素的接口 */
+    patchProp:hostPatchProp,/** 绑定属性的接口 */
+    insert:hostInsert /** 插入元素的接口 */
   } = options
 
   function render(vnode: any, container: any) {
@@ -87,14 +87,14 @@ export function createRenderer(options:any){
   
   function mountElement(vnode: any, container: any, parentComponent:any) {
     // 创建元素
-    const el = (vnode.el = createElement(vnode.type));
+    const el = (vnode.el = hostCreateElement(vnode.type));
   
     // 渲染样式
     const { props, children, shapeFlag } = vnode;
-    
+
     if (props) {
       for (let key in props) {
-        patchProp(el, key, props[key])
+        hostPatchProp(el, key, props[key])
       }
     }
   
@@ -106,8 +106,7 @@ export function createRenderer(options:any){
     }
   
     // 添加到页面上
-    // container.append(el);
-    insert(el, container);
+    hostInsert(el, container);
   }
   
   function mountChilden(children: any, container: any, parentComponent:any) {
