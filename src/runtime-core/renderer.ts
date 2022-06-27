@@ -18,8 +18,8 @@ export function createRenderer(options:any){
   
   /** patch函数递归关键 */
   /**
-   * n1 是新节点
-   * n2 是旧的节点 | 初始节点
+   * n1 是旧节点
+   * n2 是新节点 | 初始节点
   */
   function patch(n1:any , n2: any, container: any, parentComponent:any) {
     /**
@@ -65,7 +65,7 @@ export function createRenderer(options:any){
   
   /** 创建组件过程 */
   function processComponent(n1:any , n2: any, container: any, parentComponent:any) {
-    mountComponent(n2, container, parentComponent);
+      mountComponent(n2, container, parentComponent);
   }
   function mountComponent(initalVNode: any, container: any, parentComponent:any) {
     // 创建组件实例
@@ -95,10 +95,9 @@ export function createRenderer(options:any){
         console.log("更新========")
         const { proxy } = instance;
         const subTree = instance.render.call(proxy);
-        const ptevTree = instance.subTree;
+        const prevTree = instance.subTree;
+        patch(prevTree, subTree, container, instance);
         instance.subTree = subTree;
-        patch(subTree, ptevTree, container, instance);
-
       }
 
     })
@@ -114,6 +113,27 @@ export function createRenderer(options:any){
 
   function patchElement(n1:any, n2:any, container:any, parentComponent:any){
     // 需要对比 n1 和 n2 两个虚拟节点并重新更新
+    // 更新Props
+    const oldProps = n1.props || {},
+          newProps = n2.props || {},
+          el = (n2.el = n1.el); // 注意这里 n2会变成n1
+    patchProps(el, oldProps, newProps);
+  }
+
+  function patchProps(el:any , oldProps:any, newProps:any){
+    for(const key in newProps){
+      const nextProp = newProps[key];
+      const prevProp = oldProps[key];
+      if(nextProp !== prevProp){
+        hostPatchProp(el, key, prevProp, nextProp)
+      }
+    }
+
+    for(const key in oldProps){
+      if(!newProps[key]){
+        hostPatchProp(el, key, oldProps[key], null)
+      }
+    }
   }
   
   function mountElement(vnode: any, container: any, parentComponent:any) {
@@ -125,7 +145,7 @@ export function createRenderer(options:any){
 
     if (props) {
       for (let key in props) {
-        hostPatchProp(el, key, props[key])
+        hostPatchProp(el, key, null, props[key])
       }
     }
   

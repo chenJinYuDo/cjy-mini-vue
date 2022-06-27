@@ -7,11 +7,15 @@ function createElement(type:string){
 }
 
 
-function patchProp(el:any, key:string, value:any){
+function patchProp(el:any, key:string, prevVal:any, nextVal:any){
   if (isEvent(key)) {
-    el.addEventListener(key.slice(2).toLocaleLowerCase(), value);
+    el.addEventListener(key.slice(2).toLocaleLowerCase(), nextVal);
   } else {
-    el.setAttribute(key, value);
+    if(nextVal === undefined || nextVal === null){
+      el.removeAttribute(key)
+    }else{
+      el.setAttribute(key, nextVal);
+    }
   }
 }
 
