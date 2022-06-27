@@ -19,6 +19,8 @@ export function createComponentInstance(vnode: any, parent:any) {
     el:null,
     providers: parent ? parent.providers : {}, /** 存储provider们 */
     parent,
+    subTree:{},
+    isMounted:false,
     emit:()=>{}
   };
 

@@ -6,7 +6,7 @@ export default {
       'div',
       {},
       [
-        h('p', {}, `count:${this.count}`),
+        h('p', {}, `count:${this.count}`), // 收集依赖
         h('button',{
           onClick: this.addOne
         }, '加一')
@@ -18,7 +18,7 @@ export default {
     const count = ref(0);
 
     const addOne = ()=> {
-      this.count.value += 1
+      count.value += 1
     }
 
 
