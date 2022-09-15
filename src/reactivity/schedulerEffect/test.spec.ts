@@ -1,5 +1,5 @@
-import { effect } from "./effect"
-import { reactive } from "./reactive"
+import { effect } from './effect'
+import { reactive } from './reactive'
 
 it('scheduler', () => {
   let dummy
